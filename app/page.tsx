@@ -30,9 +30,23 @@ export default function Page() {
       setEmailError("Business emails only.");
       return;
     }
+    if (!trimmed.includes("@")) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
     const parts = trimmed.split("@");
-    const domain = parts.length === 2 ? parts[1].toLowerCase() : "";
-    if (domain && BLOCKED_DOMAINS.includes(domain)) {
+    const domainPart = parts.length === 2 ? parts[1].trim() : "";
+    if (!domainPart) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+    const dotIndex = domainPart.indexOf(".");
+    if (dotIndex === -1 || dotIndex === domainPart.length - 1 || !domainPart.slice(dotIndex + 1).trim()) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+    const domain = domainPart.toLowerCase();
+    if (BLOCKED_DOMAINS.includes(domain)) {
       setEmailError("Business emails only.");
       return;
     }
